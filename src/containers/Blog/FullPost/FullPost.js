@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import './FullPost.css';
-import * as DAO from '../../CRUD/DAO'
+import * as DAO from '../../../CRUD/DAO'
 
 class FullPost extends Component {
     state = {
@@ -9,14 +9,15 @@ class FullPost extends Component {
     }
  
     async componentDidUpdate(prevProps) {
-        if (this.props.id && this.props.id !== prevProps.id) {
-            const post = await DAO.get(`posts/${this.props.id}`)
+         if (this.props.match.params.id && this.props.match.params.id != prevProps.match.params.id) {
+            const post = await DAO.get(`posts/${this.props.match.params.id}`)
+            console.log('post', post)
             this.setState({ post })
         } 
     }
 
     deletePostHandler = async () => {
-        DAO.delet(`posts/${this.props.id}`)
+        DAO.delet(`posts/${this.props.match.params.id}`)
     }
 
     render () {

@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
+import {Redirect} from 'react-router-dom'
 
 import './NewPost.css';
-import * as DAO from '../../CRUD/DAO'
+import * as DAO from '../../../CRUD/DAO'
 
 class NewPost extends Component {
     state = {
         title: '',
         content: '',
-        author: 'Max'
+        author: 'Max',
+        submitted: false
     }
 
     onChangeHandler = (event) => {
@@ -18,12 +20,17 @@ class NewPost extends Component {
     submitPostHandler = async (event) => {
         event.preventDefault()
         const res = await DAO.post('posts', this.state)
+        //this.setState({submitted: true})
+        this.props.history.push('/posts')
         console.log(res)
     }
 
     render () {
+        let redirect = this.state.submitted ? <Redirect to="/posts"/> : null;
+
         return (
             <form className="NewPost" onSubmit={this.submitPostHandler}>
+                {redirect}
                 <h1>Add a Post</h1>
                 <label>Title</label>
                 <input 

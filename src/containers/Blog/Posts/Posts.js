@@ -1,7 +1,10 @@
 import React from 'react'
 import Post from '../../../components/Post/Post'
 import * as DAO from "../../../CRUD/DAO";
+import FullPost from '../FullPost/FullPost'
 import './Posts.css'
+
+import { Link, Route } from 'react-router-dom'
 
 class Posts extends React.Component {
     state = {
@@ -10,7 +13,7 @@ class Posts extends React.Component {
         error: false
     };
 
-    
+
     addAuthorToPost(posts, users) {
         return posts.map(p => {
             const author = users.find(user => user.id === p.userId)
@@ -39,7 +42,7 @@ class Posts extends React.Component {
 
         Promise.all([$posts, $users])
             .then(([posts, users]) => {
-                posts = this.addAuthorToPost(posts.slice(0, 25), users)
+                posts = this.addAuthorToPost(posts.slice(0, 5), users)
                 this.setState({ posts });
             })
             .catch(e => console.log(e))
@@ -53,18 +56,22 @@ class Posts extends React.Component {
         let posts = <p style={{ textAlign: 'center' }}>Something went wrong!</p>
         if (!this.state.error) {
             posts = this.state.posts.map(post => (
-                <Post
-                    key={post.id}
-                    title={post.title}
-                    author={post.author}
-                    clicked={() => this.postSelectedHandler(post.id)} />
+                <Link key={post.id} to={`/posts/${post.id}`}>
+                    <Post
+                        title={post.title}
+                        author={post.author}
+                        clicked={() => this.postSelectedHandler(post.id)} />
+                </Link>
             ));
         }
-
+        console.log(this.props)    
         return (
-            <div
-                className="Posts">
-                {posts}
+            <div>
+                <div
+                    className="Posts">
+                    {posts}
+                </div>
+                <Route path={this.props.match.url + '/:id'} exact component={FullPost} />
             </div>
         )
     }
